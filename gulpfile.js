@@ -58,6 +58,23 @@ gulp.task("ts-compile", () => {
         .pipe(gulp.dest("out"));
 });
 
+gulp.task("webpack", (done) => {
+    const config = require("./webpack.config.js");
+    config.context = __dirname;
+    return webpack(config, (err, stats) => {
+        const statsJson = stats.toJson();
+        if (err || (statsJson.errors && statsJson.errors.length)) {
+            statsJson.errors.forEach(webpackError => {
+                gutil.log(gutil.colors.red(`Error (webpack): ${webpackError}`));
+            });
+
+            throw new gutil.PluginError('webpack', JSON.stringify(err || statsJson.errors));
+        }
+        gutil.log('[webpack]', stats.toString());
+        done();
+    });
+});
+
 gulp.task("clean", (done) => {
     return del('out', done);
 });
@@ -123,11 +140,11 @@ gulp.task("test", (done) => {
 });
 
 gulp.task("build", (done) => {
-    return runSequence("clean", "ts-compile", "html-webpack", done);
+    return runSequence("clean", "webpack", "html-webpack", done);
 });
 
 gulp.task("build_without_view", (done) => {
-    return runSequence("clean", "ts-compile", done);
+    return runSequence("clean", "webpack", done);
 });
 
 gulp.task("watch", () => {

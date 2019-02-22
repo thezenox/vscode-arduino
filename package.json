@@ -52,7 +52,7 @@
     "onCommand:arduino.initialize",
     "onDebug"
   ],
-  "main": "./out/src/extension",
+  "main": "./out/extension",
   "contributes": {
     "snippets": [
       {
@@ -557,11 +557,13 @@
     "gulp-util": "^3.0.8",
     "mocha": "^4.1.0",
     "run-sequence": "^1.2.2",
+    "ts-loader": "^5.3.3",
     "tslint": "^4.2.0",
     "typemoq": "^1.6.0",
     "typescript": "^2.2.1",
     "vscode": "^1.1.22",
-    "webpack": "^2.2.1"
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3"
   },
   "dependencies": {
     "body-parser": "^1.16.1",

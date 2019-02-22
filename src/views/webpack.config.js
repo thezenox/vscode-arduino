@@ -1,7 +1,8 @@
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Webpack = require("webpack");
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+// const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
     devtool: "source-map",
@@ -16,27 +17,40 @@ module.exports = {
         extensions: [".js", ".ts", ".tsx"]
     },
     module: {
-        loaders: [{
+        rules: [{
             test: /\.tsx?$/,
-            loader: "ts-loader"
+            use: [
+                {
+                    loader: "ts-loader"
+                }
+            ]
         }, {
             test: /\.css$/,
-            loader: ExtractTextPlugin.extract({
-                fallback: "style-loader",
-                use: "css-loader"
-            }),
+            use: [
+                MiniCssExtractPlugin.loader,
+                "css-loader"
+            ]
         }, {
             test: /\.scss$/,
-            loader: ExtractTextPlugin.extract({
-               fallback: "style-loader",
-               use: "css-loader!sass-loader" 
-            }),
+            use: [
+                MiniCssExtractPlugin.loader,
+                "css-loader",
+                "sass-loader"
+            ]
         }, {
             test: /\.(eot|ttf|woff|woff2)$/,
-            loader: "file-loader?name=/fonts/[name].[ext]"
+            use: [
+                {
+                    loader: "file-loader?name=/fonts/[name].[ext]"
+                }
+            ]
         }, {
             test: /\.svg$/,
-            loader: "svg-url-loader?name=/fonts/[name].[ext]"
+            use: [
+                {
+                    loader: "svg-url-loader?name=/fonts/[name].[ext]"
+                }
+            ]
         }]
     },
     plugins: [
@@ -48,9 +62,13 @@ module.exports = {
         //         warnings: false,
         //     },
         // }),
-        new ExtractTextPlugin({
+        // new ExtractTextPlugin({
+        //     filename: "styles/app.css",
+        //     allChunks: true
+        // }),
+        new MiniCssExtractPlugin({
             filename: "styles/app.css",
-            allChunks: true
+            chunkFilename: "styles/app.css"
         })
     ]
 };

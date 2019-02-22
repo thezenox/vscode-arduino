@@ -10,7 +10,10 @@ import * as properties from "properties";
 import * as vscode from "vscode";
 import * as WinReg from "winreg";
 
-const encodingMapping: object = JSON.parse(fs.readFileSync(path.join(__dirname, "../../../misc", "codepageMapping.json"), "utf8"));
+// const encodingMapping: object = JSON.parse(fs.readFileSync(path.join(__dirname, "../../../misc", "codepageMapping.json"), "utf8"));
+
+/* tslint:disable-next-line:no-var-requires */
+const encodingMapping: object = require("../../misc/codepageMapping.json");
 
 /**
  * This function will return the VSCode C/C++ extesnion compatible platform literals.

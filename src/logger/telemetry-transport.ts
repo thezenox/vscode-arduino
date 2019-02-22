@@ -11,7 +11,7 @@ interface IPackageInfo {
 }
 
 function getPackageInfo(context: vscode.ExtensionContext): IPackageInfo {
-    const extensionPackage = require(context.asAbsolutePath("./package.json"));
+    const extensionPackage = require("../../package.json");
     if (extensionPackage) {
         return {
             name: extensionPackage.name,
