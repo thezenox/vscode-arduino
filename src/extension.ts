@@ -109,12 +109,39 @@ export async function activate(context: vscode.ExtensionContext) {
         }));
     };
 
+    const timeoutErrorHTML = `<html>
+    <head>
+        <style>
+        body {
+            background: white;
+            color: #333;
+        }
+
+        body.vscode-dark {
+            background: #1e1e1e;
+            color: #ccc;
+        }
+        </style>
+    </head>
+    <body>
+        <h3>Oops, error occured while initializing Arduino extension.</h3>
+        <p>This error usually occures if you install Arduino IDE first time. Please try again later.</p>
+        <p>If this error remians, please launch Arduino IDE manually to initialize Arduino environment, and try in VS Code again.</p>
+    </body>
+</html>`;
+
     registerArduinoCommand("arduino.showBoardManager", async () => {
         const panel = vscode.window.createWebviewPanel("arduinoBoardManager", "Arduino Board Manager", vscode.ViewColumn.Two, {
             enableScripts: true,
             retainContextWhenHidden: true,
         });
-        panel.webview.html = await arduinoManagerProvider.provideTextDocumentContent(BOARD_MANAGER_URI);
+
+        const html = await arduinoManagerProvider.provideTextDocumentContent(BOARD_MANAGER_URI);
+        if (html) {
+            panel.webview.html = html;
+        } else {
+            panel.webview.html = timeoutErrorHTML;
+        }
     });
 
     registerArduinoCommand("arduino.showLibraryManager", async () => {
@@ -122,7 +149,12 @@ export async function activate(context: vscode.ExtensionContext) {
             enableScripts: true,
             retainContextWhenHidden: true,
         });
-        panel.webview.html = await arduinoManagerProvider.provideTextDocumentContent(LIBRARY_MANAGER_URI);
+        const html = await arduinoManagerProvider.provideTextDocumentContent(LIBRARY_MANAGER_URI);
+        if (html) {
+            panel.webview.html = html;
+        } else {
+            panel.webview.html = timeoutErrorHTML;
+        }
     });
 
     registerArduinoCommand("arduino.showBoardConfig", async () => {
@@ -130,7 +162,13 @@ export async function activate(context: vscode.ExtensionContext) {
             enableScripts: true,
             retainContextWhenHidden: true,
         });
-        panel.webview.html = await arduinoManagerProvider.provideTextDocumentContent(BOARD_CONFIG_URI);
+        const html = await arduinoManagerProvider.provideTextDocumentContent(BOARD_CONFIG_URI);
+
+        if (html) {
+            panel.webview.html = html;
+        } else {
+            panel.webview.html = timeoutErrorHTML;
+        }
     });
 
     registerArduinoCommand("arduino.showExamples", async (forceRefresh: boolean = false) => {
@@ -143,7 +181,13 @@ export async function activate(context: vscode.ExtensionContext) {
             enableScripts: true,
             retainContextWhenHidden: true,
         });
-        panel.webview.html = await arduinoManagerProvider.provideTextDocumentContent(EXAMPLES_URI);
+        const html = await arduinoManagerProvider.provideTextDocumentContent(EXAMPLES_URI);
+
+        if (html) {
+            panel.webview.html = html;
+        } else {
+            panel.webview.html = timeoutErrorHTML;
+        }
     });
 
     // change board type
