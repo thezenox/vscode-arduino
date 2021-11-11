@@ -162,9 +162,15 @@ export class SerialMonitor implements vscode.Disposable {
         }
     }
 
-    public async sendMessageToSerialPort() {
+    public async getSerialPort(): Promise<string>{
+        return this._serialPortCtrl.currentPort;
+    }
+
+    public async sendMessageToSerialPort(text = null) {
         if (this._serialPortCtrl && this._serialPortCtrl.isActive) {
-            const text = await vscode.window.showInputBox();
+            if (text == null){
+                const text = await vscode.window.showInputBox();
+            }
             try {
                 await this._serialPortCtrl.sendMessage(text);
             } catch (error) {

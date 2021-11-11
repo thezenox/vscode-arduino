@@ -92,12 +92,24 @@ export class SerialPortCtrl {
             ["open", this._currentPort, "-b", this._currentBaudRate.toString(), "--json"])
 
         this._child.on("error", (err) => {
+          console.error(`child stderr:\n${err}`);
             reject(err)
         });
 
         this._child.stdout.on("data", (data) => {
-            const jsonObj = JSON.parse(data.toString())
-            this._outputChannel.append(jsonObj["payload"] + "\n");
+            const jsonObj = JSON.parse(data)
+            var cleantext = jsonObj["payload"].replace(/(\\\")/g, "\"").split('#n#');
+            if( cleantext.length > 1){
+              for (var i of cleantext) {
+                if( i != ""){
+                  this._outputChannel.appendLine(i);
+                }
+                
+            }
+          } else {
+            this._outputChannel.append(cleantext[0]);
+          }
+            this._outputChannel.show();
         });
         // TODO: add message check to ensure _child spawned without errors
         resolve();
@@ -115,8 +127,12 @@ export class SerialPortCtrl {
         resolve();
         return;
       }
-      this._child.stdin.write(`{"cmd": "write", "payload": "${text}"}\n`, (error) => {
+      var cleantext = text.replace(/(["])/g, "\\$1");
+      var cmd = `{"cmd": "write", "payload": "${cleantext}"}\n`
+      this._child.stdin.write(cmd, (error) => {
         if (!error) {
+          //this._outputChannel.appendLine(`\n>> ${text}`);
+          //this._outputChannel.show();
           resolve();
         } else {
           return reject(error);

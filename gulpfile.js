@@ -32,15 +32,15 @@ gulp.task("html-webpack", (done) => {
     config.context = `${__dirname}/src/views`;
     config.mode = argv.mode ? argv.mode : "production";
     return webpack(config, (err, stats) => {
-        const statsJson = stats.toJson();
-        if (err || (statsJson.errors && statsJson.errors.length)) {
-            statsJson.errors.forEach(webpackError => {
-                log.error(`Error (webpack): ${webpackError}`);
-            });
+        //const statsJson = stats.toJson();
+        //if (err || (statsJson.errors && statsJson.errors.length)) {
+        //    statsJson.errors.forEach(webpackError => {
+        //        log.error(`Error (webpack): ${webpackError}`);
+         //   });
 
-            throw new PluginError("webpack", JSON.stringify(err || statsJson.errors));
-        }
-        log("[webpack]", stats.toString());
+        //    throw new PluginError("webpack", JSON.stringify(err || statsJson.errors));
+        //}
+        //log("[webpack]", stats.toString());
         done();
     });
 });
@@ -82,7 +82,13 @@ gulp.task("insert-serial-monitor-cli", async (done) => {
         fs.rmSync(zipPath);
     }
 
-    Promise.all(platforms.map(downloadAndUnzip)).then(done);
+    Promise.all(platforms.map(downloadAndUnzip)).then(function() {
+            fs.copyFile(path.join(path.resolve("serial"), 'main.exe'), path.join(path.resolve("out", "serial-monitor-cli", "win32"), 'main.exe'), (err) => {
+                if (err) throw err;
+            });
+            done
+        }
+        );
 });
 
 gulp.task("ts-compile", () => {

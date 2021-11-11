@@ -108,9 +108,9 @@ export class ArduinoApp {
             }
         };
         const dc = DeviceContext.getInstance();
-        dc.onChangeBoard(requestAnalysis);
-        dc.onChangeConfiguration(requestAnalysis);
-        dc.onChangeSketch(requestAnalysis);
+        //dc.onChangeBoard(requestAnalysis);
+        //dc.onChangeConfiguration(requestAnalysis);
+        //dc.onChangeSketch(requestAnalysis);
     }
 
     /**
